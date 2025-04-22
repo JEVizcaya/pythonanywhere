@@ -89,7 +89,7 @@ main {
 }
 /* El contenido dentro de .hero */
 .hero-text {
-    background-color: rgba(213, 211, 211, 0.75); /* Fondo blanco semitransparente */
+    background-color: rgba(248, 245, 245, 0.85); /* Fondo blanco semitransparente */
     padding: 2rem;
     border-radius: 1rem;
     width: 100%;
