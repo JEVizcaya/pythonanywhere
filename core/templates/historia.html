@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Un poco de historia - CeltaFan</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light text-dark">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">CeltaFan</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="usuarioDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            👤 {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="usuarioDropdown">
+                            <li><a class="dropdown-item" href="{% url 'perfil' %}">Perfil</a></li>
+                            <li>
+                                <form method="post" action="{% url 'logout' %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item">Salir</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'home' %}">
+                            <i class="fas fa-home"></i> <!-- Ícono de casa en blanco -->
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container py-5">
+        <h1 class="text-center text-primary mb-5">Un poco de historia</h1>
+
+        <section class="mb-4">
+            <h3 class="text-success">Fundación</h3>
+            <p>El Celta de Vigo nació el 23 de agosto de 1923 gracias a Manuel de Castro Handicap que, con la ayuda de Juan Baliño, logró fusionar los dos clubes de Vigo: el Real Vigo Sporting y el Real Fortuna. El nuevo club fue presidido por Manuel de Bárcena y Andrés.</p>
+            <p>Aunque el Vigo Sporting fue subcampeón de la Copa de España en 1908, al Celta se le negó el acceso a la Primera División en 1928, a pesar de cumplir los requisitos. En 1929 el club se retiró para afrontar una reestructuración.</p>
+        </section>
+
+        <section class="mb-4">
+            <h3 class="text-success">Reingreso en la Liga y ascenso a Primera División</h3>
+            <p>El Celta volvió a la competición en Tercera División (1930-1931), logrando el ascenso a Segunda tras vencer al Recreativo de Huelva 7-0. En 1935-36 se proclamó campeón de Segunda y ascendió a Primera, siendo el primer equipo gallego en conseguirlo.</p>
+        </section>
+
+        <section class="mb-4">
+            <h3 class="text-success">Ascenso y clasificación para la Copa de la UEFA</h3>
+            <p>En la temporada 70-71, el Celta dirigido por Juanito Arza clasificó para la primera edición de la Copa de la UEFA. Fue eliminado por el Aberdeen FC en primera ronda.</p>
+        </section>
+
+        <section class="mb-4">
+            <h3 class="text-success">Época de ascensos y descensos</h3>
+            <p>Desde 1974 hasta 1980, el Celta alternó ascensos y descensos entre Primera y Segunda División. En 1980 descendió a Segunda B, su punto más bajo hasta entonces.</p>
+        </section>
+
+        <section class="mb-4">
+            <h3 class="text-success">Vuelta a Primera</h3>
+            <p>Con Milorad Pavic como entrenador, el Celta volvió a Segunda en 1981 y a Primera en 1982. El equipo fue campeón con goleadas destacadas y certificó el ascenso en el Helmántico. También fue sede del Mundial 82. “A Foliada do Celta” nació en este momento como himno oficioso del club.</p>
+        </section>
+
+        <section class="mb-4">
+            <h3 class="text-success">Primera División en la temporada 1987/1988</h3>
+            <p>Con José María Maguregui al mando, el Celta mantuvo una buena posición en liga. A pesar de lesiones de figuras como Baltazar, se lograron grandes victorias como ante el Barcelona (3-1). Jorge Otero debutó esa temporada.</p>
+        </section>
+
+        <section class="mb-4">
+            <h3 class="text-success">Logros históricos</h3>
+            <ul>
+                <li>3 subcampeonatos de Copa del Rey: 1948, 1994, 2001</li>
+                <li>Campeón de la Copa Intertoto: 2000</li>
+                <li>Participaciones europeas: 7 en Copa de la UEFA, 1 en Liga de Campeones (alcanzando octavos)</li>
+                <li>Copa Xunta de Galicia: 2006-07</li>
+            </ul>
+        </section>
+
+        <section class="mb-4">
+            <h3 class="text-success">Datos del club</h3>
+            <ul>
+                <li>Temporadas en 1ª: 45 | 2ª: 29 | 2ªB: 1</li>
+                <li>Mejor puesto: 4º (47/48 y 02/03) | Peor: 19º (89/90 y 03/04)</li>
+                <li>Primer gol en 1ª: Nolete (1939) | en 2ª: Ramiro (1929)</li>
+                <li>Goles emblemáticos: 500º (1950), 1000º (1971)</li>
+                <li>Mayor nº goles en liga: 69 (98/99) | Menor: 21 (58/59)</li>
+                <li>Mayor nº puntos: 64 (98/99)</li>
+            </ul>
+        </section>
+
+        <section class="mb-4">
+            <h3 class="text-success">Palmarés</h3>
+            <ul>
+                <li><strong>Regionales:</strong> Campeonato de Galicia (6), Copa Xunta (1)</li>
+                <li><strong>Nacionales:</strong> Segunda División (3), Segunda B (1)</li>
+                <li><strong>Internacionales:</strong> Copa Intertoto (1)</li>
+                <li><strong>Amistosos:</strong> Trofeo Ciudad de Vigo (13), Quinocho (8), Teresa Herrera (1)</li>
+            </ul>
+        </section>
+
+        <footer class="text-center mt-5">
+            <p class="text-muted">&copy; 2025 CeltaFan – Comunidad Celeste</p>
+        </footer>
+    </div>
+    <footer class="bg-primary text-white text-center py-3 mt-auto">
+        &copy; 2025 CeltaFan - Comunidad Celeste
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

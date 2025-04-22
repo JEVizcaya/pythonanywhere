@@ -12,6 +12,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django import forms
+from django.shortcuts import render, get_object_or_404
 
 
 
@@ -69,3 +70,9 @@ def editar_perfil_view(request):
     else:
         form = EditarPerfilForm(instance=request.user)
     return render(request, 'usuarios/editar_perfil.html', {'form': form})
+
+def detalle_noticia(request, id):
+    noticia = get_object_or_404(Noticia, pk=id)
+    return render(request, 'noticias/detalle_noticia.html', {'noticia': noticia})
+def historia_view(request):
+    return render(request, 'historia.html')
