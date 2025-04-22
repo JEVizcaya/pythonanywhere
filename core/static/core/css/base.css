@@ -1,0 +1,121 @@
+/* Estructura general con Flexbox para empujar el footer */
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    flex: 1;
+    background-color: #e3f2fd;
+    background-image: url('https://rccelta.es/app/uploads/2024/02/20240211_Partido_GETAFEvsRCCELTA_aficion-11-scaled.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-family: 'Roboto', sans-serif;
+}
+main {
+    flex: 1;
+}
+
+
+
+.navbar {
+    background-color: #0033a0;
+    /* Azul oscuro para la navbar */
+}
+
+.navbar-brand,
+.nav-link {
+    color: white !important;
+}
+
+.navbar-nav .nav-link:hover,
+.nav-item.dropdown:hover .nav-link {
+    color: #ffffff !important;
+    /* blanco puro */
+    text-decoration: underline;
+    /* subrayado para mayor visibilidad */
+}
+
+.dropdown-item:hover {
+    background-color: #1e88e5;
+    /* azul claro de fondo */
+    color: white !important;
+    /* texto blanco */
+}
+
+
+
+.hero {
+    background-image: url('../img/celta_bg.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 60vh; /* Altura ajustable */
+    color: black;
+    text-align: center;
+    
+    display: flex;
+    justify-content: center; /* Centrado horizontal */
+    align-items: center; /* Centrado vertical */
+    padding: 0 2rem; /* Espaciado horizontal */
+}
+
+
+
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: black;
+    text-shadow: none;
+    /* Eliminamos la sombra difuminada */
+}
+
+.hero p {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+/* El contenido dentro de .hero */
+.hero-text {
+    background-color: rgba(213, 211, 211, 0.75); /* Fondo blanco semitransparente */
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 700px;
+    box-sizing: border-box; /* evita que el padding agrande el ancho */
+    margin: 0 1rem; /* margen lateral para que respire en móviles */
+}
+.hero-text h1 {
+    font-size: 2.5rem;
+    word-wrap: break-word; /* permite cortar el texto si es muy largo */
+    margin-bottom: 1rem;
+}
+
+
+/* Footer estilizado */
+footer {
+    background-color: #0033a0;
+    color: white;
+    padding: 1.5em 0;
+    text-align: center;
+}
+
+footer p {
+    margin: 0;
+}
+
+.footer-text {
+    font-size: 0.9rem;
+}
+
+@media (max-width: 576px) {
+    .hero-text h1 {
+        font-size: 1.8rem;
+    }
+
+    .hero-text p {
+        font-size: 1rem;
+    }
+}

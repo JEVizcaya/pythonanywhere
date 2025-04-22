@@ -1,5 +1,5 @@
 """
-URL configuration for mysite project.
+URL configuration for celtafan project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.2/topics/http/urls/
@@ -15,10 +15,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from app1 import views # Importa las vistas de tu aplicación app1
+from django.urls import path,include
+
 
 urlpatterns = [
-    path("", views.index, name="index"),
     path('admin/', admin.site.urls),
-]
+    path('', include('core.urls')),
+] 
