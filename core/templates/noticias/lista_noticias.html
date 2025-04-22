@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Noticias - CeltaFan{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4 text-center">Últimas Noticias</h2>
+    <div class="row">
+        
+        {% for noticia in noticias %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ noticia.titulo }}</h5>
+                    <p class="card-text">{{ noticia.contenido|truncatewords:30 }}</p>
+                    <p class="text-muted">{{ noticia.fecha_publicacion|date:"d M Y H:i" }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

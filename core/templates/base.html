@@ -32,7 +32,7 @@
                             Secciones
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="seccionesDropdown">
-                            <li><a class="dropdown-item" href="#">Noticias</a></li>
+                            <li><a class="dropdown-item" href="{% url 'lista_noticias' %}">Noticias</a></li>
                             <li><a class="dropdown-item" href="#">Plantilla</a></li>
                             <li><a class="dropdown-item" href="#">Partidos</a></li>
                         </ul>
@@ -48,12 +48,8 @@
 
     <!-- CONTENIDO PRINCIPAL -->
     <main class="flex-fill">
-    <div class="hero">
-        <div class="hero-text  bg-opacity-75 p-4 rounded">
-            <h1>Bienvenido a CeltaFan</h1>
-            <p>Tu espacio celeste para seguir al Real Club Celta de Vigo.</p>
-        </div>
-    </div>
+        {% block content %}
+        {% endblock %}
     </main> 
 
     <!-- FOOTER -->

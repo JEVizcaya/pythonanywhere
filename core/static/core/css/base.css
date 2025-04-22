@@ -11,7 +11,7 @@ body {
     background-color: #e3f2fd;
     background-image: url('https://rccelta.es/app/uploads/2024/02/20240211_Partido_GETAFEvsRCCELTA_aficion-11-scaled.jpg');
     background-size: cover;
-    background-repeat: no-repeat;
+    background-repeat: repeat-y;       /* repetir sólo vertical */
     background-position: center;
     font-family: 'Roboto', sans-serif;
 }
@@ -124,5 +124,75 @@ footer p {
 
     .hero-text p {
         font-size: 1rem;
+    }
+}
+
+/* Estilos específicos para la página de Noticias */
+.container.py-5 {
+    max-width: 1200px; /* Limitar el ancho de la página para no verse demasiado estirada */
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+h2 {
+    background-color: rgba(255, 255, 255, 0.7);  /* Fondo blanco semitransparente */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+h2.mb-4.text-center {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #004c71; /* Color celeste oscuro para el título */
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
+
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #003d59; /* Azul más oscuro */
+    margin-bottom: 15px;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+.text-muted {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.row .col-md-6 {
+    margin-bottom: 20px;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 15px;
+    }
+    .card-title {
+        font-size: 1.1rem;
+    }
+    h2.mb-4.text-center {
+        font-size: 2rem;
     }
 }
