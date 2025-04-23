@@ -26,6 +26,7 @@ main {
 
 .navbar {
     background-color: #89CFF0 !important; /* Celeste */
+    
 }
 /* Centrar y agrandar el logo del navbar */
 .navbar-brand {
@@ -38,6 +39,7 @@ main {
 .navbar-brand,
 .nav-link {
     color: white !important;
+    
 }
 
 
@@ -45,7 +47,7 @@ main {
 .nav-item.dropdown:hover .nav-link {
     color: #ffffff !important;
     /* blanco puro */
-    text-decoration: underline;
+    text-decoration: none;
     /* subrayado para mayor visibilidad */
 }
 
