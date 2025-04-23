@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from datetime import date
 
 # Create your models here.
 class Noticia(models.Model):
@@ -19,3 +20,39 @@ class Comentario(models.Model):
 
     def __str__(self):
         return f"Comentario de {self.usuario.username} en {self.noticia.titulo}"
+    
+class Jugador(models.Model):
+    POSICIONES = [
+        ('POR', 'Portero'),
+        ('DEF', 'Defensa'),
+        ('MED', 'Centrocampista'),
+        ('DEL', 'Delantero'),
+    ]
+
+    nombre_completo = models.CharField(max_length=100)
+    dorsal = models.PositiveIntegerField()
+    posicion = models.CharField(max_length=3, choices=POSICIONES)
+    foto = models.ImageField(upload_to='jugadores/')
+    fecha_nacimiento = models.DateField(null=True)
+    lugar_nacimiento = models.CharField(max_length=100)
+    provincia = models.CharField(max_length=100)
+    nacionalidad = models.CharField(max_length=100)
+    bandera = models.ImageField(upload_to='banderas/')
+    altura = models.DecimalField(max_digits=4, decimal_places=2)  # Ej: 1.83
+    pie_preferido = models.CharField(max_length=10)
+    fin_contrato = models.DateField()
+
+    def __str__(self):
+        return f"{self.nombre_completo} ({self.get_posicion_display()})"
+
+    def lugar_completo(self):
+        return f"{self.lugar_nacimiento} ({self.provincia})"
+    def edad(self):
+        if self.fecha_nacimiento:
+            today = date.today()
+            return (
+                today.year
+                - self.fecha_nacimiento.year
+                - ((today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day))
+            )
+        return "Desconocida"

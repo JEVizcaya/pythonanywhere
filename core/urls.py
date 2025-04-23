@@ -4,6 +4,8 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LogoutView
 from .views import logout_view
 from .views import editar_perfil_view
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('perfil/', views.perfil_view, name='perfil'),
@@ -15,4 +17,9 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='usuarios/login.html'), name='login'),
     path('logout/', logout_view, name='logout'),
     path('registro/', views.registro, name='registro'),
+    path('plantilla/', views.plantilla, name='plantilla'),
+    path('jugador/<int:jugador_id>/', views.detalle_jugador, name='detalle_jugador'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

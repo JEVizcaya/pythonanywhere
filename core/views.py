@@ -1,6 +1,6 @@
 
 from django.utils import timezone
-from .models import Noticia,Comentario
+from .models import Noticia,Comentario,Jugador
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from .forms import ComentarioForm
@@ -93,3 +93,17 @@ def detalle_noticia(request, noticia_id):
     })
 def historia_view(request):
     return render(request, 'historia.html')
+
+def plantilla(request):
+    jugadores = Jugador.objects.all()
+    context = {
+        'porteros': jugadores.filter(posicion='POR'),
+        'defensas': jugadores.filter(posicion='DEF'),
+        'medios': jugadores.filter(posicion='MED'),
+        'delanteros': jugadores.filter(posicion='DEL'),
+    }
+    return render(request, 'jugadores/plantilla.html', context)
+
+def detalle_jugador(request, jugador_id):
+    jugador = get_object_or_404(Jugador, id=jugador_id)
+    return render(request, 'jugadores/detalle_jugador.html', {'jugador': jugador})
