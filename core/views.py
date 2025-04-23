@@ -1,9 +1,9 @@
 
 from django.utils import timezone
-from .models import Noticia
+from .models import Noticia,Comentario
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-
+from .forms import ComentarioForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from .forms import RegistroForm
@@ -70,8 +70,26 @@ def editar_perfil_view(request):
         form = EditarPerfilForm(instance=request.user)
     return render(request, 'usuarios/editar_perfil.html', {'form': form})
 
-def detalle_noticia(request, id):
-    noticia = get_object_or_404(Noticia, pk=id)
-    return render(request, 'noticias/detalle_noticia.html', {'noticia': noticia})
+def detalle_noticia(request, noticia_id):
+    noticia = get_object_or_404(Noticia, id=noticia_id)
+    
+    if request.method == 'POST' and request.user.is_authenticated:
+        form = ComentarioForm(request.POST)
+        if form.is_valid():
+            comentario = form.save(commit=False)
+            comentario.noticia = noticia
+            comentario.usuario = request.user
+            comentario.save()
+            return redirect('detalle_noticia', noticia_id=noticia.id)
+    else:
+        form = ComentarioForm()
+
+    comentarios = noticia.comentarios.all().order_by('-fecha_comentario')
+
+    return render(request, 'noticias/detalle_noticia.html', {
+        'noticia': noticia,
+        'form': form,
+        'comentarios': comentarios
+    })
 def historia_view(request):
     return render(request, 'historia.html')

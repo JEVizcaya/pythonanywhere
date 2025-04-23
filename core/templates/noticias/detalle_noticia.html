@@ -24,6 +24,39 @@
             <div class="mt-4">
                 <p>{{ noticia.contenido|linebreaks }}</p>
             </div>
+
+            <!-- Sección de Comentarios -->
+            <div class="mt-5">
+                <h3>Comentarios</h3>
+                <hr>
+
+                <!-- Formulario de Comentario -->
+                {% if user.is_authenticated %}
+                <form method="post" action="{% url 'detalle_noticia' noticia.id %}">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Publicar Comentario</button>
+                    </form>
+                {% else %}
+                    <p>Para comentar, <a href="{% url 'login' %}">inicia sesión</a>.</p>
+                {% endif %}
+
+                <hr>
+
+                <!-- Lista de Comentarios -->
+                {% for comentario in comentarios %}
+                    <div class="media mb-4">
+                        
+                        <div class="media-body">
+                            <h5 class="mt-0">{{ comentario.usuario.username }}</h5>
+                            <p>{{ comentario.contenido }}</p>
+                            <small class="text-muted">{{ comentario.fecha_comentario|date:"d M Y H:i" }}</small>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No hay comentarios aún. Sé el primero en comentar.</p>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
