@@ -3,11 +3,10 @@ from django.utils import timezone
 from .models import Noticia
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
-from django.shortcuts import render, redirect
+
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from .forms import RegistroForm
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -30,13 +29,13 @@ def lista_noticias(request):
 
 def registro(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = RegistroForm(request.POST)
         if form.is_valid():
-            usuario = form.save()
-            login(request, usuario)
-            return redirect('home')
+            form.save()
+            messages.success(request, '¡Tu cuenta ha sido creada exitosamente! Ahora puedes iniciar sesión.')
+            return redirect('login')  # Redirige a la página de login después del registro
     else:
-        form = UserCreationForm()
+        form = RegistroForm()
     return render(request, 'usuarios/registro.html', {'form': form})
 
 @require_POST

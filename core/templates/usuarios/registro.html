@@ -64,6 +64,15 @@
         <div class="card p-4">
             <div class="card-body">
                 <h2 class="text-center mb-4">Registro</h2>
+
+                {% if messages %}
+                    <div class="alert alert-success">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
                 <form method="post">
                     {% csrf_token %}
                     {{ form.as_p }}
