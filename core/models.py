@@ -62,6 +62,7 @@ class Partido(models.Model):
     fecha = models.DateTimeField()
     estadio = models.CharField(max_length=100, blank=True, null=True)
     logo_rival = models.ImageField(upload_to='logos_rivales/', blank=True, null=True)
+    jornada = models.PositiveIntegerField(null=True, blank=True)
 
     class Meta:
         ordering = ['fecha']

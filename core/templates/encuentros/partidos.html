@@ -106,11 +106,16 @@
                                 {% endif %}
                                 <h5 class="card-title mb-0">{{ partido.rival }}</h5>
                             </div>
+                            {% if partido.jornada %}
+                                    Jornada: {{ partido.jornada }}
+                                {% endif %}
                             <p class="card-text mb-2">
+                                
                                 Fecha: {{ partido.fecha|date:"d/m/Y H:i" }}<br>
                                 {% if partido.estadio %}
-                                    Estadio: {{ partido.estadio }}
+                                    Estadio: {{ partido.estadio }}<br>
                                 {% endif %}
+                                
                             </p>
                         </div>
                     </div>

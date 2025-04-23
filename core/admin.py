@@ -1,8 +1,13 @@
 from django.contrib import admin
-from .models import Noticia,Jugador,Partido,ComentarioNoticia
-from django.contrib.auth.admin import UserAdmin
+from .models import Noticia, Jugador, Partido, ComentarioNoticia, Comentario
 
 admin.site.register(Noticia)
+
+@admin.register(Comentario)
+class ComentarioAdmin(admin.ModelAdmin):
+    list_display = ('contenido', 'autor', 'noticia', 'fecha_comentario')
+    list_filter = ('fecha_comentario', 'noticia')
+    search_fields = ('contenido', 'autor__username')
 
 @admin.register(Jugador)
 class JugadorAdmin(admin.ModelAdmin):
@@ -14,9 +19,3 @@ class JugadorAdmin(admin.ModelAdmin):
 class PartidoAdmin(admin.ModelAdmin):
     list_display = ('rival', 'fecha', 'estadio')
     list_filter = ('fecha',)
-
-@admin.register(ComentarioNoticia)
-class ComentarioNoticiaAdmin(admin.ModelAdmin):
-    list_display = ('autor', 'noticia', 'contenido', 'fecha_creacion')  # Agrega los campos que deseas ver en la tabla
-    search_fields = ('autor__username', 'contenido')  # Permite buscar por autor o contenido
-    list_filter = ('noticia', 'fecha_creacion')  # Filtros para la tabla en admin

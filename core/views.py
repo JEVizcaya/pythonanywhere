@@ -58,7 +58,7 @@ def logout_view(request):
 class EditarPerfilForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email']
+        fields = ['username', 'email', 'first_name', 'last_name']
 
 @login_required
 def editar_perfil_view(request):
