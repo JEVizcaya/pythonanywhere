@@ -79,13 +79,13 @@ def detalle_noticia(request, noticia_id):
         if form.is_valid():
             comentario = form.save(commit=False)
             comentario.noticia = noticia
-            comentario.usuario = request.user
+            comentario.autor = request.user  # Cambié 'usuario' por 'autor'
             comentario.save()
             return redirect('detalle_noticia', noticia_id=noticia.id)
     else:
         form = ComentarioForm()
 
-    comentarios = noticia.comentarios.all().order_by('-fecha_comentario')
+    comentarios = noticia.comentarios_generales.all().order_by('-fecha_comentario')
 
     return render(request, 'noticias/detalle_noticia.html', {
         'noticia': noticia,

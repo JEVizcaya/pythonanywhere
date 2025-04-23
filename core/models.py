@@ -13,13 +13,13 @@ class Noticia(models.Model):
         return self.titulo
     
 class Comentario(models.Model):
-    noticia = models.ForeignKey(Noticia, related_name='comentarios', on_delete=models.CASCADE)
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    noticia = models.ForeignKey(Noticia, on_delete=models.CASCADE, related_name='comentarios_generales')  # Cambié 'comentarios' por 'comentarios_generales'
+    autor = models.ForeignKey(User, on_delete=models.CASCADE)
     contenido = models.TextField()
     fecha_comentario = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Comentario de {self.usuario.username} en {self.noticia.titulo}"
+        return f'Comentario de {self.autor.username} en {self.noticia.titulo}'
     
 class Jugador(models.Model):
     POSICIONES = [
@@ -68,3 +68,12 @@ class Partido(models.Model):
 
     def __str__(self):
         return f"{self.rival} - {self.fecha.strftime('%d/%m/%Y %H:%M')}"
+    
+class ComentarioNoticia(models.Model):
+    noticia = models.ForeignKey(Noticia, on_delete=models.CASCADE, related_name='comentarios_especiales')  # Cambié 'comentarios' por 'comentarios_especiales'
+    autor = models.ForeignKey(User, on_delete=models.CASCADE)
+    contenido = models.TextField()
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Comentario de {self.autor.username} en {self.noticia.titulo}'
