@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Noticia,Jugador
+from .models import Noticia,Jugador,Partido
 from django.contrib.auth.admin import UserAdmin
 
 admin.site.register(Noticia)
@@ -9,5 +9,8 @@ class JugadorAdmin(admin.ModelAdmin):
     search_fields = ('nombre', 'posicion', 'nacionalidad')
     list_filter = ('posicion', 'nacionalidad')
 
-
+@admin.register(Partido)
+class PartidoAdmin(admin.ModelAdmin):
+    list_display = ('rival', 'fecha', 'estadio')
+    list_filter = ('fecha',)
 

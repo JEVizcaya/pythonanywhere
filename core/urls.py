@@ -19,6 +19,7 @@ urlpatterns = [
     path('registro/', views.registro, name='registro'),
     path('plantilla/', views.plantilla, name='plantilla'),
     path('jugador/<int:jugador_id>/', views.detalle_jugador, name='detalle_jugador'),
+    path('partidos/', views.partidos, name='partidos'),
 ]
 
 if settings.DEBUG:

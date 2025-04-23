@@ -19,9 +19,11 @@
 
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
+                    <!-- Acceso -->
                     {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="usuarioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="usuarioDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             👤 {{ user.username }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="usuarioDropdown">
@@ -39,9 +41,11 @@
                         <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a>
                     </li>
                     {% endif %}
+
+                    <!-- Icono de Home en el extremo derecho -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">
-                            <i class="fas fa-home"></i> <!-- Ícono de casa -->
+                        <a class="nav-link text-white" href="{% url 'home' %}">
+                            <i class="fas fa-home"></i> <!-- Ícono de casa en blanco -->
                         </a>
                     </li>
                 </ul>

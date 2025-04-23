@@ -56,3 +56,15 @@ class Jugador(models.Model):
                 - ((today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day))
             )
         return "Desconocida"
+    
+class Partido(models.Model):
+    rival = models.CharField(max_length=100)
+    fecha = models.DateTimeField()
+    estadio = models.CharField(max_length=100, blank=True, null=True)
+    logo_rival = models.ImageField(upload_to='logos_rivales/', blank=True, null=True)
+
+    class Meta:
+        ordering = ['fecha']
+
+    def __str__(self):
+        return f"{self.rival} - {self.fecha.strftime('%d/%m/%Y %H:%M')}"

@@ -1,6 +1,6 @@
 
 from django.utils import timezone
-from .models import Noticia,Comentario,Jugador
+from .models import Noticia,Comentario,Jugador,Partido
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from .forms import ComentarioForm
@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django import forms
 from django.shortcuts import render, get_object_or_404
+from datetime import datetime
 
 
 
@@ -107,3 +108,7 @@ def plantilla(request):
 def detalle_jugador(request, jugador_id):
     jugador = get_object_or_404(Jugador, id=jugador_id)
     return render(request, 'jugadores/detalle_jugador.html', {'jugador': jugador})
+
+def partidos(request):
+    proximos_partidos = Partido.objects.filter(fecha__gte=datetime.now())
+    return render(request, 'encuentros/partidos.html', {'partidos': proximos_partidos})
