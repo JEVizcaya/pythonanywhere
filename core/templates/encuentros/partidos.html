@@ -112,6 +112,20 @@
 
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
+                    <!-- Dropdown de Secciones -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="seccionesDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Secciones
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="seccionesDropdown">
+                            <li><a class="dropdown-item" href="{% url 'lista_noticias' %}">Noticias</a></li>
+                            <li><a class="dropdown-item" href="{% url 'plantilla' %}">Plantilla</a></li>
+                            <li><a class="dropdown-item" href="{% url 'partidos' %}">Partidos</a></li>
+                            <li><a class="dropdown-item" href="{% url 'clasificacion' %}">Clasificación</a></li>
+                            <li><a class="dropdown-item" href="{% url 'historia' %}">Un poco de historia</a></li>
+                        </ul>
+                    </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white" href="#" id="usuarioDropdown" role="button"
