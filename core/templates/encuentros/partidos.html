@@ -15,8 +15,8 @@
             background-color: #fff;
             border: 1px solid #e0e0e0;
             border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 20px;
+            padding: 10px; /* Reducimos el padding general de la ficha */
+            margin-bottom: 15px; /* Reducimos el margen inferior entre fichas */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
@@ -24,7 +24,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 5px; /* Reducimos el margen inferior de la info del equipo */
         }
 
         .equipo-detalle {
@@ -35,32 +35,59 @@
         }
 
         .logo-equipo {
-            width: 30px;
-            height: 30px;
+            width: 40px; /* Ajustamos un poco el tamaño del logo */
+            height: 40px; /* Ajustamos un poco el tamaño del logo */
             margin-right: 5px;
             object-fit: contain;
         }
 
         .nombre-equipo {
             font-weight: bold;
-            font-size: 1em;
+            font-size: 1.1em; /* Aumentamos el tamaño del nombre del equipo */
             text-align: center;
+        }
+
+        .marcador-container {
+            display: flex;
+            align-items: center;
+            margin: 0 5px; /* Reducimos el margen horizontal del contenedor del marcador */
         }
 
         .marcador {
             font-size: 1.2em;
             font-weight: bold;
-            margin: 0 5px;
-            width: 30px;
+            width: 25px; /* Reducimos el ancho del marcador */
             text-align: center;
+            margin: 0; /* Eliminamos el margen individual del marcador */
+        }
+
+        .separador-marcador {
+            margin: 0 5px; /* Ajustamos el margen del separador */
+            font-weight: bold;
+            font-size: 1.2em;
         }
 
         .info-partido {
-            text-align: center;
-            color: #777;
-            font-size: 0.85em;
-            margin-top: 10px;
-        }
+        text-align: center;
+        color: #777;
+        font-size: 0.95em;
+        margin-top: 8px;
+    }
+
+    .jornada-partido {
+        font-weight: bold;
+        font-size: 1em;
+        margin-bottom: 5px;
+    }
+
+    .info-partido strong {
+        font-size: 1em;
+        font-weight: bold; /* Aseguramos que las etiquetas estén en negrita */
+    }
+
+    .info-partido p span { /* Selecciona los spans dentro de los párrafos de info-partido */
+        font-weight: bold; /* Aplica negrita al contenido dentro del span */
+    }
         .temporada-actual {
             text-align: center;
             margin-top: 20px;
@@ -75,7 +102,6 @@
 <body style="background-color: #89CFF0;">
 
 
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="#">CeltaFan</a>
@@ -85,7 +111,6 @@
 
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
-                    <!-- Acceso -->
                     {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white" href="#" id="usuarioDropdown" role="button"
@@ -108,11 +133,9 @@
                     </li>
                     {% endif %}
 
-                    <!-- Icono de Home en el extremo derecho -->
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{% url 'home' %}">
-                            <i class="fas fa-home"></i> <!-- Ícono de casa en blanco -->
-                        </a>
+                            <i class="fas fa-home"></i> </a>
                     </li>
                 </ul>
             </div>
@@ -131,33 +154,35 @@
             {% for partido in partidos_finalizados %}
             <div class="col mb-4">
                 <div class="resultado-ficha shadow-sm">
+                    <div class="info-partido text-center">
+                        {% if partido.jornada %}
+                        <p class="mb-0 jornada-partido"><strong>Jornada:</strong> {{ partido.jornada }}</p>
+                        {% endif %}
+                        <p class="mb-1"><strong>Fecha:</strong> <span>{{ partido.fecha|date:"d/m/Y H:i" }}</span></p>
+                        {% if partido.estadio %}
+                        <p class="mb-0"><strong>Estadio:</strong> <span>{{ partido.estadio }}</span></p>
+                        {% endif %}
+                    </div>
                     <div class="equipo-info">
                         <div class="equipo-detalle">
-                            {% if partido.logo_local %}
-                            <img src="{{ partido.logo_local.url }}" alt="Logo de {{ partido.equipo_local }}"
+                            {% if partido.equipo_local.logo %}
+                            <img src="{{ partido.equipo_local.logo.url }}" alt="Logo de {{ partido.equipo_local }}"
                                 class="logo-equipo">
                             {% endif %}
                             <div class="nombre-equipo">{{ partido.equipo_local }}</div>
-                            <span class="marcador">{{ partido.goles_local }}</span>
                         </div>
-                        <span class="marcador">-</span>
-                        <div class="equipo-detalle">
+                        <div class="marcador-container">
+                            <span class="marcador">{{ partido.goles_local }}</span>
+                            <span class="separador-marcador">-</span>
                             <span class="marcador">{{ partido.goles_visitante }}</span>
+                        </div>
+                        <div class="equipo-detalle">
                             <div class="nombre-equipo">{{ partido.equipo_visitante }}</div>
-                            {% if partido.logo_rival %}
-                            <img src="{{ partido.logo_rival.url }}" alt="Logo de {{ partido.equipo_visitante }}"
+                            {% if partido.equipo_visitante.logo %}
+                            <img src="{{ partido.equipo_visitante.logo.url }}" alt="Logo de {{ partido.equipo_visitante }}"
                                 class="logo-equipo">
                             {% endif %}
                         </div>
-                    </div>
-                    <div class="info-partido">
-                        <p class="mb-1"><strong>Fecha:</strong> {{ partido.fecha|date:"d/m/Y H:i" }}</p>
-                        {% if partido.jornada %}
-                        <p class="mb-1"><strong>Jornada:</strong> {{ partido.jornada }}</p>
-                        {% endif %}
-                        {% if partido.estadio %}
-                        <p class="mb-0"><strong>Estadio:</strong> {{ partido.estadio }}</p>
-                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -172,31 +197,33 @@
             {% for partido in proximos_partidos %}
             <div class="col mb-4">
                 <div class="resultado-ficha shadow-sm">
+                    <div class="info-partido text-center">
+                        {% if partido.jornada %}
+                        <p class="mb-0 jornada-partido"><strong>Jornada:</strong> {{ partido.jornada }}</p>
+                        {% endif %}
+                        <p class="mb-1"><strong>Fecha:</strong> <span>{{ partido.fecha|date:"d/m/Y H:i" }}</span></p>
+                        {% if partido.estadio %}
+                        <p class="mb-0"><strong>Estadio:</strong> <span>{{ partido.estadio }}</span></p>
+                        {% endif %}
+                    </div>
                     <div class="equipo-info">
                         <div class="equipo-detalle">
-                            {% if partido.logo_local %}
-                            <img src="{{ partido.logo_local.url }}" alt="Logo de {{ partido.equipo_local }}"
+                            {% if partido.equipo_local.logo %}
+                            <img src="{{ partido.equipo_local.logo.url }}" alt="Logo de {{ partido.equipo_local }}"
                                 class="logo-equipo">
                             {% endif %}
                             <div class="nombre-equipo">{{ partido.equipo_local }}</div>
                         </div>
-                        <span class="marcador">-</span>
+                        <div class="marcador-container">
+                            <span class="marcador">-</span>
+                        </div>
                         <div class="equipo-detalle">
                             <div class="nombre-equipo">{{ partido.equipo_visitante }}</div>
-                            {% if partido.logo_rival %}
-                            <img src="{{ partido.logo_rival.url }}" alt="Logo de {{ partido.equipo_visitante }}"
+                            {% if partido.equipo_visitante.logo %}
+                            <img src="{{ partido.equipo_visitante.logo.url }}" alt="Logo de {{ partido.equipo_visitante }}"
                                 class="logo-equipo">
                             {% endif %}
                         </div>
-                    </div>
-                    <div class="info-partido">
-                        <p class="mb-1"><strong>Fecha:</strong> {{ partido.fecha|date:"d/m/Y H:i" }}</p>
-                        {% if partido.jornada %}
-                        <p class="mb-1"><strong>Jornada:</strong> {{ partido.jornada }}</p>
-                        {% endif %}
-                        {% if partido.estadio %}
-                        <p class="mb-0"><strong>Estadio:</strong> {{ partido.estadio }}</p>
-                        {% endif %}
                     </div>
                 </div>
             </div>

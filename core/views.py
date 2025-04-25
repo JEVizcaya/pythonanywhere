@@ -117,19 +117,19 @@ def partidos(request):
     try:
         celta = Equipo.objects.get(nombre__icontains='celta') # Busca un equipo que contenga 'celta' en su nombre
     except Equipo.DoesNotExist:
-        # Manejar el caso en que no se encuentra el Celta (esto no debería ocurrir si tienes los datos)
+        # Manejar el caso en que no se encuentra el Celta
         partidos_celta_finalizados = Partido.objects.none()
         proximos_partidos_celta = Partido.objects.none()
     else:
         partidos_celta_finalizados = Partido.objects.filter(
             (models.Q(equipo_local=celta) | models.Q(equipo_visitante=celta)),
             fecha__lt=timezone.now()
-        ).order_by('-fecha')
+        ).order_by('jornada') # Ordenamos los partidos finalizados por jornada
 
         proximos_partidos_celta = Partido.objects.filter(
             (models.Q(equipo_local=celta) | models.Q(equipo_visitante=celta)),
             fecha__gte=timezone.now()
-        ).order_by('fecha')
+        ).order_by('fecha') # Los próximos partidos los mantenemos ordenados por fecha
 
     context = {
         'partidos_finalizados': partidos_celta_finalizados,
