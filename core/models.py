@@ -58,17 +58,25 @@ class Jugador(models.Model):
         return "Desconocida"
     
 class Partido(models.Model):
-    rival = models.CharField(max_length=100)
+    temporada = models.CharField(max_length=10, default='2024-2025')
+    jornada = models.PositiveIntegerField(null=True, blank=True)
     fecha = models.DateTimeField()
     estadio = models.CharField(max_length=100, blank=True, null=True)
+
+    equipo_local = models.CharField(max_length=100, default="Equipo Local Desconocido")
+    goles_local = models.PositiveIntegerField(null=True, blank=True, default=0)
+
+    equipo_visitante = models.CharField(max_length=100, default="Equipo Visitante Desconocido")
+    goles_visitante = models.PositiveIntegerField(null=True, blank=True, default=0)
+
     logo_rival = models.ImageField(upload_to='logos_rivales/', blank=True, null=True)
-    jornada = models.PositiveIntegerField(null=True, blank=True)
+    logo_local = models.ImageField(upload_to='logos_locales/', blank=True, null=True)  # Nuevo campo para el logo local
 
     class Meta:
         ordering = ['fecha']
 
     def __str__(self):
-        return f"{self.rival} - {self.fecha.strftime('%d/%m/%Y %H:%M')}"
+        return f"{self.equipo_local} vs {self.equipo_visitante} ({self.fecha.strftime('%d/%m/%Y %H:%M')})"
     
 class ComentarioNoticia(models.Model):
     noticia = models.ForeignKey(Noticia, on_delete=models.CASCADE, related_name='comentarios_especiales')  # Cambié 'comentarios' por 'comentarios_especiales'

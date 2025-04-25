@@ -110,7 +110,12 @@ def detalle_jugador(request, jugador_id):
     return render(request, 'jugadores/detalle_jugador.html', {'jugador': jugador})
 
 def partidos(request):
-    proximos_partidos = Partido.objects.filter(fecha__gte=datetime.now())
-    return render(request, 'encuentros/partidos.html', {'partidos': proximos_partidos})
+    proximos_partidos = Partido.objects.filter(fecha__gte=datetime.now()).order_by('fecha')
+    partidos_finalizados = Partido.objects.filter(fecha__lt=datetime.now()).order_by('-fecha')
+    context = {
+        'proximos_partidos': proximos_partidos,
+        'partidos_finalizados': partidos_finalizados,
+    }
+    return render(request, 'encuentros/partidos.html', context)
 def clasificacion(request):
     return render(request, 'encuentros/clasificacion.html')  # Asegúrate de tener un archivo clasificacion.html

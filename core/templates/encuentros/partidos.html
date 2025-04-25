@@ -9,10 +9,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'core/css/encuentros/partidos.css' %}"> <!-- reutilizando estilos -->
+    <link rel="stylesheet" href="{% static 'core/css/encuentros/partidos.css' %}">
+    <style>
+        .resultado-ficha {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .equipo-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .equipo-detalle {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .logo-equipo {
+            width: 30px;
+            height: 30px;
+            margin-right: 5px;
+            object-fit: contain;
+        }
+
+        .nombre-equipo {
+            font-weight: bold;
+            font-size: 1em;
+            text-align: center;
+        }
+
+        .marcador {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 0 5px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .info-partido {
+            text-align: center;
+            color: #777;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+        .temporada-actual {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffffff;
+        }
+    </style>
 </head>
 
-<body style="background-color: #89CFF0; display: flex; flex-direction: column; min-height: 100vh;">
+<body style="background-color: #89CFF0;">
+
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -57,38 +118,96 @@
             </div>
         </div>
     </nav>
+    <div class="temporada-actual">
+        Temporada 2024/2025
+    </div>
 
-    <!-- Contenido de los partidos -->
-    <div class="container py-5" style="flex-grow: 1;">
-        <h2 class="mb-4 text-center">Próximos Partidos</h2>
-        <div class="row">
-            {% for partido in partidos %}
-            <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
-                            {% if partido.logo_rival %}
-                                <img src="{{ partido.logo_rival.url }}" alt="Logo de {{ partido.rival }}" class="logo-rival me-3" style="width: 40px; height: 40px;">
+
+    <div class="container py-4" style="flex-grow: 1;">
+
+
+        <h2 class="mb-4 text-center mt-5">Partidos Finalizados</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+            {% for partido in partidos_finalizados %}
+            <div class="col mb-4">
+                <div class="resultado-ficha shadow-sm">
+                    <div class="equipo-info">
+                        <div class="equipo-detalle">
+                            {% if partido.logo_local %}
+                            <img src="{{ partido.logo_local.url }}" alt="Logo de {{ partido.equipo_local }}"
+                                class="logo-equipo">
                             {% endif %}
-                            <h5 class="card-title mb-0">{{ partido.rival }}</h5>
+                            <div class="nombre-equipo">{{ partido.equipo_local }}</div>
+                            <span class="marcador">{{ partido.goles_local }}</span>
                         </div>
-                        {% if partido.jornada %}
-                            <p class="text-muted">Jornada: {{ partido.jornada }}</p>
-                        {% endif %}
-                        <p class="card-text mb-2">
-                            Fecha: {{ partido.fecha|date:"d/m/Y H:i" }}<br>
-                            {% if partido.estadio %}
-                                Estadio: {{ partido.estadio }}<br>
+                        <span class="marcador">-</span>
+                        <div class="equipo-detalle">
+                            <span class="marcador">{{ partido.goles_visitante }}</span>
+                            <div class="nombre-equipo">{{ partido.equipo_visitante }}</div>
+                            {% if partido.logo_rival %}
+                            <img src="{{ partido.logo_rival.url }}" alt="Logo de {{ partido.equipo_visitante }}"
+                                class="logo-equipo">
                             {% endif %}
-                        </p>
+                        </div>
+                    </div>
+                    <div class="info-partido">
+                        <p class="mb-1"><strong>Fecha:</strong> {{ partido.fecha|date:"d/m/Y H:i" }}</p>
+                        {% if partido.jornada %}
+                        <p class="mb-1"><strong>Jornada:</strong> {{ partido.jornada }}</p>
+                        {% endif %}
+                        {% if partido.estadio %}
+                        <p class="mb-0"><strong>Estadio:</strong> {{ partido.estadio }}</p>
+                        {% endif %}
                     </div>
                 </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-center">No hay partidos finalizados.</p>
+            </div>
+            {% endfor %}
+        </div>
+        <h2 class="mb-4 text-center">Próximos Partidos</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+            {% for partido in proximos_partidos %}
+            <div class="col mb-4">
+                <div class="resultado-ficha shadow-sm">
+                    <div class="equipo-info">
+                        <div class="equipo-detalle">
+                            {% if partido.logo_local %}
+                            <img src="{{ partido.logo_local.url }}" alt="Logo de {{ partido.equipo_local }}"
+                                class="logo-equipo">
+                            {% endif %}
+                            <div class="nombre-equipo">{{ partido.equipo_local }}</div>
+                        </div>
+                        <span class="marcador">-</span>
+                        <div class="equipo-detalle">
+                            <div class="nombre-equipo">{{ partido.equipo_visitante }}</div>
+                            {% if partido.logo_rival %}
+                            <img src="{{ partido.logo_rival.url }}" alt="Logo de {{ partido.equipo_visitante }}"
+                                class="logo-equipo">
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="info-partido">
+                        <p class="mb-1"><strong>Fecha:</strong> {{ partido.fecha|date:"d/m/Y H:i" }}</p>
+                        {% if partido.jornada %}
+                        <p class="mb-1"><strong>Jornada:</strong> {{ partido.jornada }}</p>
+                        {% endif %}
+                        {% if partido.estadio %}
+                        <p class="mb-0"><strong>Estadio:</strong> {{ partido.estadio }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-center">No hay próximos partidos.</p>
             </div>
             {% endfor %}
         </div>
     </div>
 
-    <!-- Footer -->
     <footer class="bg-primary text-white text-center py-3 mt-auto">
         &copy; 2025 CeltaFan - Comunidad Celeste
     </footer>

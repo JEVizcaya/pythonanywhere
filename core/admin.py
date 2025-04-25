@@ -17,5 +17,19 @@ class JugadorAdmin(admin.ModelAdmin):
 
 @admin.register(Partido)
 class PartidoAdmin(admin.ModelAdmin):
-    list_display = ('rival', 'fecha', 'estadio')
-    list_filter = ('fecha',)
+    list_display = ('equipo_local', 'logo_local_preview', 'equipo_visitante', 'logo_rival_preview', 'fecha', 'estadio', 'jornada', 'goles_local', 'goles_visitante')
+    list_filter = ('fecha', 'temporada', 'jornada', 'equipo_local', 'equipo_visitante')
+
+    def logo_local_preview(self, obj):
+        from django.utils.html import format_html
+        if obj.logo_local:
+            return format_html('<img src="{}" style="max-height: 50px; max-width: 50px;" />', obj.logo_local.url)
+        return None
+    logo_local_preview.short_description = 'Logo Local'
+
+    def logo_rival_preview(self, obj):
+        from django.utils.html import format_html
+        if obj.logo_rival:
+            return format_html('<img src="{}" style="max-height: 50px; max-width: 50px;" />', obj.logo_rival.url)
+        return None
+    logo_rival_preview.short_description = 'Logo Rival'
