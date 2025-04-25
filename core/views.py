@@ -142,23 +142,56 @@ def clasificacion(request):
     clasificacion_data = []
 
     for equipo in equipos:
+        # Filtramos solo los partidos con goles registrados (ya jugados)
         partidos_jugados = Partido.objects.filter(
-            Q(equipo_local=equipo) | Q(equipo_visitante=equipo),
-            temporada=temporada_seleccionada
+            (Q(equipo_local=equipo) | Q(equipo_visitante=equipo)),
+            temporada=temporada_seleccionada,
+            goles_local__isnull=False,  # Aseguramos que el partido tenga goles
+            goles_visitante__isnull=False  # Aseguramos que el partido tenga goles
         ).count()
+
         partidos_ganados = Partido.objects.filter(
-            Q(equipo_local=equipo, goles_local__gt=F('goles_visitante')) | Q(equipo_visitante=equipo, goles_visitante__gt=F('goles_local')),
-            temporada=temporada_seleccionada
+            (Q(equipo_local=equipo, goles_local__gt=F('goles_visitante')) | 
+            Q(equipo_visitante=equipo, goles_visitante__gt=F('goles_local'))),
+            temporada=temporada_seleccionada,
+            goles_local__isnull=False,
+            goles_visitante__isnull=False
         ).count()
+
         partidos_empatados = Partido.objects.filter(
-            Q(equipo_local=equipo, goles_local=F('goles_visitante')) | Q(equipo_visitante=equipo, goles_visitante=F('goles_local')),
-            temporada=temporada_seleccionada
+            (Q(equipo_local=equipo, goles_local=F('goles_visitante')) | 
+            Q(equipo_visitante=equipo, goles_visitante=F('goles_local'))),
+            temporada=temporada_seleccionada,
+            goles_local__isnull=False,
+            goles_visitante__isnull=False
         ).count()
+
         partidos_perdidos = partidos_jugados - partidos_ganados - partidos_empatados
-        goles_favor = Partido.objects.filter(equipo_local=equipo, temporada=temporada_seleccionada).aggregate(sum_goles=models.Sum('goles_local'))['sum_goles'] or 0
-        goles_favor += Partido.objects.filter(equipo_visitante=equipo, temporada=temporada_seleccionada).aggregate(sum_goles=models.Sum('goles_visitante'))['sum_goles'] or 0
-        goles_contra = Partido.objects.filter(equipo_local=equipo, temporada=temporada_seleccionada).aggregate(sum_goles=models.Sum('goles_visitante'))['sum_goles'] or 0
-        goles_contra += Partido.objects.filter(equipo_visitante=equipo, temporada=temporada_seleccionada).aggregate(sum_goles=models.Sum('goles_local'))['sum_goles'] or 0
+        
+        goles_favor = Partido.objects.filter(
+            equipo_local=equipo, 
+            temporada=temporada_seleccionada,
+            goles_local__isnull=False
+        ).aggregate(sum_goles=models.Sum('goles_local'))['sum_goles'] or 0
+        
+        goles_favor += Partido.objects.filter(
+            equipo_visitante=equipo, 
+            temporada=temporada_seleccionada,
+            goles_visitante__isnull=False
+        ).aggregate(sum_goles=models.Sum('goles_visitante'))['sum_goles'] or 0
+
+        goles_contra = Partido.objects.filter(
+            equipo_local=equipo, 
+            temporada=temporada_seleccionada,
+            goles_visitante__isnull=False
+        ).aggregate(sum_goles=models.Sum('goles_visitante'))['sum_goles'] or 0
+        
+        goles_contra += Partido.objects.filter(
+            equipo_visitante=equipo, 
+            temporada=temporada_seleccionada,
+            goles_local__isnull=False
+        ).aggregate(sum_goles=models.Sum('goles_local'))['sum_goles'] or 0
+
         diferencia_goles = goles_favor - goles_contra
         puntos = partidos_ganados * 3 + partidos_empatados
 
@@ -174,6 +207,86 @@ def clasificacion(request):
             'pts': puntos,
         })
 
+    # Ordenamos la clasificación
+    clasificacion_ordenada = sorted(clasificacion_data, key=lambda x: (-x['pts'], -x['dg'], -x['gf']))
+
+    context = {
+        'clasificacion': clasificacion_ordenada,
+        'temporada_seleccionada': temporada_seleccionada,
+    }
+    return render(request, 'encuentros/clasificacion.html', context)
+def clasificacion(request):
+    temporada_seleccionada = request.GET.get('temporada', '2024-2025')
+    equipos = Equipo.objects.all()
+    clasificacion_data = []
+
+    for equipo in equipos:
+        # Filtramos solo los partidos con goles registrados (ya jugados)
+        partidos_jugados = Partido.objects.filter(
+            (Q(equipo_local=equipo) | Q(equipo_visitante=equipo)),
+            temporada=temporada_seleccionada,
+            goles_local__isnull=False,  # Aseguramos que el partido tenga goles
+            goles_visitante__isnull=False  # Aseguramos que el partido tenga goles
+        ).count()
+
+        partidos_ganados = Partido.objects.filter(
+            (Q(equipo_local=equipo, goles_local__gt=F('goles_visitante')) | 
+            Q(equipo_visitante=equipo, goles_visitante__gt=F('goles_local'))),
+            temporada=temporada_seleccionada,
+            goles_local__isnull=False,
+            goles_visitante__isnull=False
+        ).count()
+
+        partidos_empatados = Partido.objects.filter(
+            (Q(equipo_local=equipo, goles_local=F('goles_visitante')) | 
+            Q(equipo_visitante=equipo, goles_visitante=F('goles_local'))),
+            temporada=temporada_seleccionada,
+            goles_local__isnull=False,
+            goles_visitante__isnull=False
+        ).count()
+
+        partidos_perdidos = partidos_jugados - partidos_ganados - partidos_empatados
+        
+        goles_favor = Partido.objects.filter(
+            equipo_local=equipo, 
+            temporada=temporada_seleccionada,
+            goles_local__isnull=False
+        ).aggregate(sum_goles=models.Sum('goles_local'))['sum_goles'] or 0
+        
+        goles_favor += Partido.objects.filter(
+            equipo_visitante=equipo, 
+            temporada=temporada_seleccionada,
+            goles_visitante__isnull=False
+        ).aggregate(sum_goles=models.Sum('goles_visitante'))['sum_goles'] or 0
+
+        goles_contra = Partido.objects.filter(
+            equipo_local=equipo, 
+            temporada=temporada_seleccionada,
+            goles_visitante__isnull=False
+        ).aggregate(sum_goles=models.Sum('goles_visitante'))['sum_goles'] or 0
+        
+        goles_contra += Partido.objects.filter(
+            equipo_visitante=equipo, 
+            temporada=temporada_seleccionada,
+            goles_local__isnull=False
+        ).aggregate(sum_goles=models.Sum('goles_local'))['sum_goles'] or 0
+
+        diferencia_goles = goles_favor - goles_contra
+        puntos = partidos_ganados * 3 + partidos_empatados
+
+        clasificacion_data.append({
+            'equipo': equipo,
+            'pj': partidos_jugados,
+            'pg': partidos_ganados,
+            'pe': partidos_empatados,
+            'pp': partidos_perdidos,
+            'gf': goles_favor,
+            'gc': goles_contra,
+            'dg': diferencia_goles,
+            'pts': puntos,
+        })
+
+    # Ordenamos la clasificación
     clasificacion_ordenada = sorted(clasificacion_data, key=lambda x: (-x['pts'], -x['dg'], -x['gf']))
 
     context = {
