@@ -1,7 +1,9 @@
 from django.contrib import admin
-from .models import Noticia, Jugador, Partido, ComentarioNoticia, Comentario
+from .models import Noticia, Jugador, Partido, ComentarioNoticia, Comentario,Equipo
+from django.utils.safestring import mark_safe
 
 admin.site.register(Noticia)
+
 
 @admin.register(Comentario)
 class ComentarioAdmin(admin.ModelAdmin):
@@ -15,21 +17,20 @@ class JugadorAdmin(admin.ModelAdmin):
     search_fields = ('nombre', 'posicion', 'nacionalidad')
     list_filter = ('posicion', 'nacionalidad')
 
-@admin.register(Partido)
 class PartidoAdmin(admin.ModelAdmin):
-    list_display = ('equipo_local', 'logo_local_preview', 'equipo_visitante', 'logo_rival_preview', 'fecha', 'estadio', 'jornada', 'goles_local', 'goles_visitante')
-    list_filter = ('fecha', 'temporada', 'jornada', 'equipo_local', 'equipo_visitante')
+    list_display = ('logo_local_preview', 'equipo_local', 'goles_local', 'goles_visitante', 'equipo_visitante', 'logo_visitante_preview', 'fecha', 'jornada', 'estadio')
 
     def logo_local_preview(self, obj):
-        from django.utils.html import format_html
-        if obj.logo_local:
-            return format_html('<img src="{}" style="max-height: 50px; max-width: 50px;" />', obj.logo_local.url)
-        return None
+        if obj.equipo_local and obj.equipo_local.logo:
+            return mark_safe(f'<img src="{obj.equipo_local.logo.url}" width="50" height="50" />')
+        return '-'
     logo_local_preview.short_description = 'Logo Local'
 
-    def logo_rival_preview(self, obj):
-        from django.utils.html import format_html
-        if obj.logo_rival:
-            return format_html('<img src="{}" style="max-height: 50px; max-width: 50px;" />', obj.logo_rival.url)
-        return None
-    logo_rival_preview.short_description = 'Logo Rival'
+    def logo_visitante_preview(self, obj):
+        if obj.equipo_visitante and obj.equipo_visitante.logo:
+            return mark_safe(f'<img src="{obj.equipo_visitante.logo.url}" width="50" height="50" />')
+        return '-'
+    logo_visitante_preview.short_description = 'Logo Visitante'
+
+admin.site.register(Equipo)
+admin.site.register(Partido, PartidoAdmin)

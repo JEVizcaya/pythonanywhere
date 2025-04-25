@@ -1,6 +1,6 @@
 
 from django.utils import timezone
-from .models import Noticia,Comentario,Jugador,Partido
+from .models import Noticia,Comentario,Jugador,Partido, Equipo
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from .forms import ComentarioForm
@@ -13,6 +13,10 @@ from django.contrib.auth.models import User
 from django import forms
 from django.shortcuts import render, get_object_or_404
 from datetime import datetime
+from core.models import Partido, Equipo
+from django.db.models import Q, F
+from django.db import models
+
 
 
 
@@ -110,12 +114,70 @@ def detalle_jugador(request, jugador_id):
     return render(request, 'jugadores/detalle_jugador.html', {'jugador': jugador})
 
 def partidos(request):
-    proximos_partidos = Partido.objects.filter(fecha__gte=datetime.now()).order_by('fecha')
-    partidos_finalizados = Partido.objects.filter(fecha__lt=datetime.now()).order_by('-fecha')
+    try:
+        celta = Equipo.objects.get(nombre__icontains='celta') # Busca un equipo que contenga 'celta' en su nombre
+    except Equipo.DoesNotExist:
+        # Manejar el caso en que no se encuentra el Celta (esto no debería ocurrir si tienes los datos)
+        partidos_celta_finalizados = Partido.objects.none()
+        proximos_partidos_celta = Partido.objects.none()
+    else:
+        partidos_celta_finalizados = Partido.objects.filter(
+            (models.Q(equipo_local=celta) | models.Q(equipo_visitante=celta)),
+            fecha__lt=timezone.now()
+        ).order_by('-fecha')
+
+        proximos_partidos_celta = Partido.objects.filter(
+            (models.Q(equipo_local=celta) | models.Q(equipo_visitante=celta)),
+            fecha__gte=timezone.now()
+        ).order_by('fecha')
+
     context = {
-        'proximos_partidos': proximos_partidos,
-        'partidos_finalizados': partidos_finalizados,
+        'partidos_finalizados': partidos_celta_finalizados,
+        'proximos_partidos': proximos_partidos_celta,
     }
     return render(request, 'encuentros/partidos.html', context)
 def clasificacion(request):
-    return render(request, 'encuentros/clasificacion.html')  # Asegúrate de tener un archivo clasificacion.html
+    temporada_seleccionada = request.GET.get('temporada', '2024-2025')
+    equipos = Equipo.objects.all()
+    clasificacion_data = []
+
+    for equipo in equipos:
+        partidos_jugados = Partido.objects.filter(
+            Q(equipo_local=equipo) | Q(equipo_visitante=equipo),
+            temporada=temporada_seleccionada
+        ).count()
+        partidos_ganados = Partido.objects.filter(
+            Q(equipo_local=equipo, goles_local__gt=F('goles_visitante')) | Q(equipo_visitante=equipo, goles_visitante__gt=F('goles_local')),
+            temporada=temporada_seleccionada
+        ).count()
+        partidos_empatados = Partido.objects.filter(
+            Q(equipo_local=equipo, goles_local=F('goles_visitante')) | Q(equipo_visitante=equipo, goles_visitante=F('goles_local')),
+            temporada=temporada_seleccionada
+        ).count()
+        partidos_perdidos = partidos_jugados - partidos_ganados - partidos_empatados
+        goles_favor = Partido.objects.filter(equipo_local=equipo, temporada=temporada_seleccionada).aggregate(sum_goles=models.Sum('goles_local'))['sum_goles'] or 0
+        goles_favor += Partido.objects.filter(equipo_visitante=equipo, temporada=temporada_seleccionada).aggregate(sum_goles=models.Sum('goles_visitante'))['sum_goles'] or 0
+        goles_contra = Partido.objects.filter(equipo_local=equipo, temporada=temporada_seleccionada).aggregate(sum_goles=models.Sum('goles_visitante'))['sum_goles'] or 0
+        goles_contra += Partido.objects.filter(equipo_visitante=equipo, temporada=temporada_seleccionada).aggregate(sum_goles=models.Sum('goles_local'))['sum_goles'] or 0
+        diferencia_goles = goles_favor - goles_contra
+        puntos = partidos_ganados * 3 + partidos_empatados
+
+        clasificacion_data.append({
+            'equipo': equipo,
+            'pj': partidos_jugados,
+            'pg': partidos_ganados,
+            'pe': partidos_empatados,
+            'pp': partidos_perdidos,
+            'gf': goles_favor,
+            'gc': goles_contra,
+            'dg': diferencia_goles,
+            'pts': puntos,
+        })
+
+    clasificacion_ordenada = sorted(clasificacion_data, key=lambda x: (-x['pts'], -x['dg'], -x['gf']))
+
+    context = {
+        'clasificacion': clasificacion_ordenada,
+        'temporada_seleccionada': temporada_seleccionada,
+    }
+    return render(request, 'encuentros/clasificacion.html', context)

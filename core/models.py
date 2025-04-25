@@ -56,27 +56,25 @@ class Jugador(models.Model):
                 - ((today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day))
             )
         return "Desconocida"
-    
-class Partido(models.Model):
-    temporada = models.CharField(max_length=10, default='2024-2025')
-    jornada = models.PositiveIntegerField(null=True, blank=True)
-    fecha = models.DateTimeField()
-    estadio = models.CharField(max_length=100, blank=True, null=True)
-
-    equipo_local = models.CharField(max_length=100, default="Equipo Local Desconocido")
-    goles_local = models.PositiveIntegerField(null=True, blank=True, default=0)
-
-    equipo_visitante = models.CharField(max_length=100, default="Equipo Visitante Desconocido")
-    goles_visitante = models.PositiveIntegerField(null=True, blank=True, default=0)
-
-    logo_rival = models.ImageField(upload_to='logos_rivales/', blank=True, null=True)
-    logo_local = models.ImageField(upload_to='logos_locales/', blank=True, null=True)  # Nuevo campo para el logo local
-
-    class Meta:
-        ordering = ['fecha']
+class Equipo(models.Model):
+    nombre = models.CharField(max_length=100)
+    logo = models.ImageField(upload_to='logos/', null=True, blank=True)
 
     def __str__(self):
-        return f"{self.equipo_local} vs {self.equipo_visitante} ({self.fecha.strftime('%d/%m/%Y %H:%M')})"
+        return self.nombre   
+class Partido(models.Model):
+    equipo_local = models.ForeignKey(Equipo, related_name='partidos_local', on_delete=models.CASCADE)
+    equipo_visitante = models.ForeignKey(Equipo, related_name='partidos_visitante', on_delete=models.CASCADE)
+    goles_local = models.IntegerField(null=True, blank=True)
+    goles_visitante = models.IntegerField(null=True, blank=True)
+    fecha = models.DateTimeField()
+    jornada = models.IntegerField(null=True, blank=True)
+    estadio = models.CharField(max_length=200, null=True, blank=True)
+    temporada = models.CharField(max_length=9, default="2024-2025") # Añade un campo para la temporada
+    # ... otros campos que puedas tener ...
+
+    def __str__(self):
+        return f"{self.equipo_local} vs {self.equipo_visitante} ({self.fecha})"
     
 class ComentarioNoticia(models.Model):
     noticia = models.ForeignKey(Noticia, on_delete=models.CASCADE, related_name='comentarios_especiales')  # Cambié 'comentarios' por 'comentarios_especiales'
@@ -86,3 +84,4 @@ class ComentarioNoticia(models.Model):
 
     def __str__(self):
         return f'Comentario de {self.autor.username} en {self.noticia.titulo}'
+    
