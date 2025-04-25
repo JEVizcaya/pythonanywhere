@@ -14,7 +14,7 @@
             margin-bottom: 30px;
             overflow-x: auto;
             /* Añadir scroll horizontal si el contenido es más ancho */
-            max-width: 1400px;
+            max-width: 1300px;
             /* Ajustar el ancho máximo del contenedor */
             margin-left: auto;
             /* Mantener el centrado en pantallas grandes */
@@ -74,6 +74,15 @@
         .clasificacion-table td:last-child {
             padding-right: 15px;
             /* Compensar la reducción del padding general para la última columna */
+        }
+        .clasificacion-table thead th:nth-child(3) {
+            display: none; /* Oculta la columna del logo en el thead */
+        }
+        .clasificacion-table tbody td.col-equipo img.logo-equipo-clasificacion {
+            width: 25px; /* Tamaño del logo */
+            height: 25px; /* Tamaño del logo */
+            margin-right: 5px; /* Espacio entre el logo y el nombre */
+            object-fit: contain; /* Asegura que el logo se ajuste sin deformarse */
         }
 
         /* Estilo específico para la columna Equipo (thead y tbody) */

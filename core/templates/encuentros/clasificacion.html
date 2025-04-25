@@ -62,6 +62,7 @@
                 <tr>
                     <th class="posicion-celda">Pos</th>
                     <th class="col-equipo">Equipo</th>
+                    <th></th>
                     <th class="text-center">Pts</th>
                     <th class="text-center">PJ</th>
                     <th class="text-center">PG</th>
@@ -88,7 +89,12 @@
                             {{ forloop.counter }}
                         {% endif %}
                     </td>
-                    <td class="col-equipo dato-resaltado">{{ equipo_data.equipo }}</td>
+                    <td class="col-equipo dato-resaltado">
+                        {% if equipo_data.equipo.logo %}
+                            <img src="{{ equipo_data.equipo.logo.url }}" alt="Logo de {{ equipo_data.equipo.nombre }}" class="logo-equipo-clasificacion">
+                        {% endif %}
+                        {{ equipo_data.equipo.nombre }}
+                    </td>
                     <td class="text-center dato-resaltado">{{ equipo_data.pts }}</td>
                     <td class="text-center dato-resaltado">{{ equipo_data.pj }}</td>
                     <td class="text-center dato-resaltado">{{ equipo_data.pg }}</td>
@@ -99,10 +105,7 @@
                     <td class="text-center dato-resaltado">{{ equipo_data.dg }}</td>
                 </tr>
                 {% empty %}
-                <tr>
-                    <td colspan="10" class="text-center no-data">No hay datos de clasificación disponibles para esta
-                        temporada.</td>
-                </tr>
+                <tr><td colspan="11" class="text-center no-data">No hay datos de clasificación disponibles para esta temporada.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
