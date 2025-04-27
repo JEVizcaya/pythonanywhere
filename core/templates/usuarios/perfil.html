@@ -7,10 +7,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-<body style=" background-color: #89CFF0;">
+<body style="background-color: #89CFF0; min-height: 100vh; display: flex; flex-direction: column;">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="#">CeltaFan</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -19,11 +19,9 @@
 
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
-                    <!-- Acceso -->
                     {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="usuarioDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="usuarioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             👤 {{ user.username }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="usuarioDropdown">
@@ -41,11 +39,9 @@
                         <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a>
                     </li>
                     {% endif %}
-
-                    <!-- Icono de Home en el extremo derecho -->
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{% url 'home' %}">
-                            <i class="fas fa-home"></i> <!-- Ícono de casa en blanco -->
+                            <i class="fas fa-home"></i>
                         </a>
                     </li>
                 </ul>
@@ -54,31 +50,40 @@
     </nav>
 
     <!-- Contenido -->
-    <div class="container py-5">
+    <main class="container py-5 flex-grow-1">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h3 class="mb-0">Bienvenido, {{ user.username }}!</h3>
+                <div class="card shadow rounded-4">
+                    <div class="card-header bg-primary text-white text-center rounded-top-4">
+                        <h2 class="mb-0">¡Hola, {{ user.username }}!</h2>
                     </div>
-                    <div class="card-body">
-                        <p><strong>Email:</strong> {{ user.email }}</p>
-                        <p><strong>Fecha de registro:</strong> {{ user.date_joined|date:"d M Y" }}</p>
-                        <hr>
-                        <div class="d-flex justify-content-between">
+                    <div class="card-body bg-white">
+                        <ul class="list-group list-group-flush mb-4">
+                            <li class="list-group-item">
+                                <strong>Email:</strong> {{ user.email }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Fecha de registro:</strong> {{ user.date_joined|date:"d M Y" }}
+                            </li>
+                        </ul>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="{% url 'editar_perfil' %}" class="btn btn-warning">
+                                <i class="fas fa-user-edit me-2"></i> Editar perfil
+                            </a>
                             <form method="post" action="{% url 'logout' %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">Cerrar sesión</button>
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
+                                </button>
                             </form>
-                            <a href="{% url 'editar_perfil' %}" class="btn btn-warning">Editar perfil</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <footer class="bg-primary text-white text-center py-3 mt-auto">
+    <footer class="bg-primary text-white text-center py-3 mt-4">
         &copy; 2025 CeltaFan - Comunidad Celeste
     </footer>
 

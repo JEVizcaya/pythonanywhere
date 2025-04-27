@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-<body style=" background-color: #89CFF0;">
+<body style="background-color: #89CFF0;">
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -19,11 +19,9 @@
 
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
-                    <!-- Acceso -->
                     {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="usuarioDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="usuarioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             👤 {{ user.username }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="usuarioDropdown">
@@ -41,11 +39,9 @@
                         <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a>
                     </li>
                     {% endif %}
-
-                    <!-- Icono de Home en el extremo derecho -->
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{% url 'home' %}">
-                            <i class="fas fa-home"></i> <!-- Ícono de casa en blanco -->
+                            <i class="fas fa-home"></i>
                         </a>
                     </li>
                 </ul>
@@ -57,38 +53,53 @@
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card shadow" style="background-color: rgba(255, 255, 255, 0.9);">
+                <div class="card shadow-sm">
                     <div class="card-header bg-primary text-white">
                         <h3 class="mb-0">Editar perfil</h3>
                     </div>
                     <div class="card-body">
                         <form method="post">
                             {% csrf_token %}
+                            
+                            <!-- Campo de Nombre de usuario -->
                             <div class="mb-3">
                                 <label for="id_username" class="form-label">Nombre de usuario</label>
-                                {{ form.username }}
+                                <input type="text" name="username" id="id_username" class="form-control" value="{{ form.username.value }}">
                             </div>
+
+                            <!-- Campo de Correo Electrónico -->
                             <div class="mb-3">
                                 <label for="id_email" class="form-label">Correo electrónico</label>
-                                {{ form.email }}
+                                <input type="email" name="email" id="id_email" class="form-control" value="{{ form.email.value }}">
                             </div>
+
+                            <!-- Campo de Nombre -->
                             <div class="mb-3">
                                 <label for="id_first_name" class="form-label">Nombre</label>
-                                {{ form.first_name }}
+                                <input type="text" name="first_name" id="id_first_name" class="form-control" value="{{ form.first_name.value }}">
                             </div>
+
+                            <!-- Campo de Apellidos -->
                             <div class="mb-3">
                                 <label for="id_last_name" class="form-label">Apellidos</label>
-                                {{ form.last_name }}
+                                <input type="text" name="last_name" id="id_last_name" class="form-control" value="{{ form.last_name.value }}">
                             </div>
-                            <div class="d-flex justify-content-between">
-                                <button type="submit" class="btn btn-success">Guardar cambios</button>
-                                <div>
-                                    <a href="{% url 'password_change' %}" class="btn btn-danger me-2">Cambiar contraseña</a>
-                                    <a href="{% url 'perfil' %}" class="btn btn-secondary">Cancelar</a>
+
+                            <!-- Botones -->
+                            <div class="d-flex flex-column flex-sm-row justify-content-between">
+                                <button type="submit" class="btn btn-success mb-2 mb-sm-0">
+                                    <i class="fas fa-save"></i> Guardar cambios
+                                </button>
+                                <div class="d-flex flex-column flex-sm-row align-items-center">
+                                    <a href="{% url 'password_change' %}" class="btn btn-danger me-sm-2 mb-2 mb-sm-0">
+                                        <i class="fas fa-lock"></i> Cambiar contraseña
+                                    </a>
+                                    <a href="{% url 'perfil' %}" class="btn btn-secondary mb-2 mb-sm-0">
+                                        <i class="fas fa-times-circle"></i> Cancelar
+                                    </a>
                                 </div>
                             </div>
                         </form>
-                        
                     </div>
                 </div>
             </div>

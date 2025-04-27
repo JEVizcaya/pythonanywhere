@@ -6,7 +6,19 @@ from .models import Comentario
 class RegistroForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+        fields = ['username', 'first_name', 'last_name', 'email']
+        labels = {
+            'username': 'Nombre de usuario',
+            'first_name': 'Nombre',
+            'last_name': 'Apellidos',
+            'email': 'Correo electrónico',
+        }
+        help_texts = {
+            'username': '',  # Dejar la ayuda de texto vacía para quitar el mensaje
+        }
+
+    password1 = forms.CharField(widget=forms.PasswordInput(), label='Contraseña')
+    password2 = forms.CharField(widget=forms.PasswordInput(), label='Repetir contraseña')
 
     def save(self, commit=True):
         user = super().save(commit=False)

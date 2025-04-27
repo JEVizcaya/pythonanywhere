@@ -99,6 +99,14 @@
             font-weight: bold;
             color: #ffffff;
         }
+        @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .fade-in {
+        animation: fadeIn 1s ease-in;
+    }
     </style>
 </head>
 
@@ -183,45 +191,60 @@
         </form>
 
         {% if partidos %}
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-                {% for partido in partidos %}
-                    <div class="col mb-4">
-                        <div class="resultado-ficha shadow-sm">
-                            <div class="info-partido text-center">
-                                {% if partido.jornada %}
-                                <p class="mb-0 jornada-partido"><strong>Jornada:</strong> {{ partido.jornada }}</p>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+        {% for partido in partidos %}
+            <div class="col mb-4">
+                <div class="resultado-ficha shadow-sm">
+                    <div class="info-partido text-center">
+                        {% if partido.jornada %}
+                        <p class="mb-0 jornada-partido"><strong>Jornada:</strong> {{ partido.jornada }}</p>
+                        {% endif %}
+                        <p class="mb-1"><strong>Fecha:</strong> <span>{{ partido.fecha|date:"d/m/Y H:i" }}</span></p>
+                        {% if partido.estadio %}
+                        <p class="mb-0"><strong>Estadio:</strong> <span>{{ partido.estadio }}</span></p>
+                        {% endif %}
+                    </div>
+                    <div class="equipo-info">
+                        <div class="equipo-detalle">
+                            {% if partido.equipo_local.logo %}
+                            <img src="{{ partido.equipo_local.logo.url }}" alt="Logo de {{ partido.equipo_local }}" class="logo-equipo">
+                            {% endif %}
+                            <div class="nombre-equipo">{{ partido.equipo_local }}</div>
+                        </div>
+                        <div class="marcador-container">
+                            <span class="marcador">
+                                {% if partido.goles_local is not None %}
+                                    {{ partido.goles_local }}
                                 {% endif %}
-                                <p class="mb-1"><strong>Fecha:</strong> <span>{{ partido.fecha|date:"d/m/Y H:i" }}</span></p>
-                                {% if partido.estadio %}
-                                <p class="mb-0"><strong>Estadio:</strong> <span>{{ partido.estadio }}</span></p>
+                            </span>
+                            <span class="separador-marcador">-</span>
+                            <span class="marcador">
+                                {% if partido.goles_visitante is not None %}
+                                    {{ partido.goles_visitante }}
                                 {% endif %}
-                            </div>
-                            <div class="equipo-info">
-                                <div class="equipo-detalle">
-                                    {% if partido.equipo_local.logo %}
-                                    <img src="{{ partido.equipo_local.logo.url }}" alt="Logo de {{ partido.equipo_local }}" class="logo-equipo">
-                                    {% endif %}
-                                    <div class="nombre-equipo">{{ partido.equipo_local }}</div>
-                                </div>
-                                <div class="marcador-container">
-                                    <span class="marcador">{{ partido.goles_local }}</span>
-                                    <span class="separador-marcador">-</span>
-                                    <span class="marcador">{{ partido.goles_visitante }}</span>
-                                </div>
-                                <div class="equipo-detalle">
-                                    <div class="nombre-equipo">{{ partido.equipo_visitante }}</div>
-                                    {% if partido.equipo_visitante.logo %}
-                                    <img src="{{ partido.equipo_visitante.logo.url }}" alt="Logo de {{ partido.equipo_visitante }}" class="logo-equipo">
-                                    {% endif %}
-                                </div>
-                            </div>
+                            </span>
+                        </div>
+                        <div class="equipo-detalle">
+                            <div class="nombre-equipo">{{ partido.equipo_visitante }}</div>
+                            {% if partido.equipo_visitante.logo %}
+                            <img src="{{ partido.equipo_visitante.logo.url }}" alt="Logo de {{ partido.equipo_visitante }}" class="logo-equipo">
+                            {% endif %}
                         </div>
                     </div>
-                {% endfor %}
+                </div>
             </div>
-        {% else %}
-            
-        {% endif %}
+        {% endfor %}
+    </div>
+
+    {% elif jornada_seleccionada %}
+    <div class="d-flex justify-content-center align-items-center fade-in" style="min-height: 300px;">
+        <div class="text-center">
+            <i class="fas fa-futbol fa-3x mb-3 text-primary"></i>
+            <h4 class="mb-3">No hay resultados para esta jornada</h4>
+            <p>Por favor, selecciona otra jornada para ver los partidos disponibles.</p>
+        </div>
+    </div>
+{% endif %}
     </div>
 
     <footer class="bg-primary text-white text-center py-3 mt-auto">

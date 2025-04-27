@@ -37,7 +37,7 @@ def registro(request):
         form = RegistroForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, '¡Tu cuenta ha sido creada exitosamente! Ahora puedes iniciar sesión.')
+            
             return redirect('login')  # Redirige a la página de login después del registro
     else:
         form = RegistroForm()
