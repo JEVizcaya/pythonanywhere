@@ -94,7 +94,9 @@
                 {% else %}
                     <p>Para comentar, <a href="{% url 'login' %}">inicia sesión</a>.</p>
                 {% endif %}
-
+                <a href="{% url 'lista_noticias' %}" class="btn btn-secondary mt-4">
+                    ← Volver a Noticias
+                </a>
                 <hr>
 
                 <!-- Lista de Comentarios -->
@@ -110,7 +112,9 @@
                     <p>No hay comentarios aún. Sé el primero en comentar.</p>
                 {% endfor %}
             </div>
+            
         </div>
+        
     </div>
 
     <footer class="bg-primary text-white text-center py-3 mt-auto">
