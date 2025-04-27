@@ -294,3 +294,24 @@ def clasificacion(request):
         'temporada_seleccionada': temporada_seleccionada,
     }
     return render(request, 'encuentros/clasificacion.html', context)
+
+
+def resultados_por_jornada(request):
+    jornada_seleccionada = request.GET.get('jornada', None)
+    
+    # Si no se ha seleccionado ninguna jornada, no mostrar partidos
+    if jornada_seleccionada:
+        # Filtrar partidos, excluyendo los del Celta (suponiendo que el nombre del equipo es "Celta")
+        partidos = Partido.objects.exclude(equipo_local__nombre="Celta").exclude(equipo_visitante__nombre="Celta")
+        partidos = partidos.filter(jornada=jornada_seleccionada)
+    else:
+        partidos = None  # No hay partidos si no se selecciona jornada
+
+    # Obtenemos las jornadas disponibles para el select
+    jornadas_disponibles = Partido.objects.values_list('jornada', flat=True).distinct()
+
+    return render(request, 'encuentros/resultados.html', {
+        'partidos': partidos,
+        'jornadas_disponibles': jornadas_disponibles,
+        'jornada_seleccionada': jornada_seleccionada,
+    })
