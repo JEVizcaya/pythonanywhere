@@ -247,9 +247,15 @@
                     <div class="nombre-equipo">{{ partido.equipo_local }}</div>
                 </div>
                 <div class="marcador-container">
-                    <span class="marcador">{{ partido.goles_local }}</span>
-                    <span class="separador-marcador">-</span>
-                    <span class="marcador">{{ partido.goles_visitante }}</span>
+                    {% if partido.goles_local is not None and partido.goles_visitante is not None %}
+                        <span class="marcador">{{ partido.goles_local }}</span>
+                        <span class="separador-marcador">-</span>
+                        <span class="marcador">{{ partido.goles_visitante }}</span>
+                    {% else %}
+                        <span class="marcador"></span>
+                        <span class="separador-marcador">-</span>
+                        <span class="marcador"></span>
+                    {% endif %}
                 </div>
                 <div class="equipo-detalle">
                     <div class="nombre-equipo">{{ partido.equipo_visitante }}</div>

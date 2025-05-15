@@ -1,4 +1,3 @@
-
 from django.utils import timezone
 from .models import Noticia,Comentario,Jugador,Partido, Equipo
 from django.contrib.auth.forms import UserCreationForm
@@ -124,7 +123,7 @@ def partidos(request):
         partidos_celta_finalizados = Partido.objects.filter(
             (models.Q(equipo_local=celta) | models.Q(equipo_visitante=celta)),
             fecha__lt=timezone.now()
-        ).order_by('jornada') # Ordenamos los partidos finalizados por jornada
+        ).order_by('-jornada') # Ordenamos los partidos finalizados por jornada descendente
 
         proximos_partidos_celta = Partido.objects.filter(
             (models.Q(equipo_local=celta) | models.Q(equipo_visitante=celta)),
